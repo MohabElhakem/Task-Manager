@@ -7,13 +7,15 @@ const userSchema = mongoose.Schema({
         required: true,
         minlength: 4,
         unique: true,
-        lowercase: true
+        lowercase: true,
+        index: true
     },
 
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        index: true
     },
 
     password: {
@@ -22,7 +24,7 @@ const userSchema = mongoose.Schema({
         minlength:6
     },
 
-    userID: {
+    _id: {
         type: String,
         default: uuidv4,
     },

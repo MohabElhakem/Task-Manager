@@ -9,7 +9,8 @@ const workspaceSchema =  mongoose.Schema({
     },
     creator_id:{
         required: true,
-        type: String
+        type: String,
+        index: true
     },
     workspaceName:{
         required: true,

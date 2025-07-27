@@ -9,11 +9,18 @@ const taskSchema = mongoose.Schema({
     },
     workspace_id: {
         required: true,
-        type: String
+        type: String,
+        index: true
+    },
+    creator_id:{
+        reuired: true,
+        type: String,
+        index: true
     },
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     note: {
         type: String,

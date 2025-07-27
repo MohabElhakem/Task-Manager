@@ -1,8 +1,5 @@
 const path = require('path');
-const workspace = require('../data/workspace');
-const workspace = require('../data/workspace');
 const workspace = require(path.join(__dirname,'..','data','workspace.js'));
-const task = require(path.join(__dirname,'..','data','task.js'));
 
 
 //Create the workspace
@@ -14,7 +11,7 @@ const createWorkspace = async(req,res)=>{
             workspaceName: data.Name,
             note: data.note,
             priority: data.priority,
-            creator_id: req.userPayload.userID,
+            creator_id: req.userPayload._id,
         });
         return res.status(201).json({message: "New Workspace Added..... Good Luck Reaching Your Goal"});
 
@@ -36,7 +33,7 @@ const createWorkspace = async(req,res)=>{
 // My work spaces
 const myWorkspaces = async (req,res)=>{
     try {
-        const workspaces = await workspace.find({creator_id: req.userPayload.userID});
+        const workspaces = await workspace.find({creator_id: req.userPayload._id});
     
         if(workspaces.length === 0 ){
             return res.status(200).json({message:"Creat Your Very First Own Workspace Please....."});
@@ -54,7 +51,10 @@ const myWorkspaces = async (req,res)=>{
                 groupWS[priority]= [];
             }
             
-            groupWS[priority].push(ws.workspaceName)
+            groupWS[priority].push({
+                workspaceName: ws.workspaceName,
+                _id : ws._id
+             });
         }
         return res.status(200).json({
             message:"Here are all the workspaces you have",

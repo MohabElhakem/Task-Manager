@@ -6,7 +6,7 @@ function createToken (user_from_database){
     const payload = {
         username: user_from_database.username,
         email: user_from_database.email,
-        userID: user_from_database.userID,
+        _id: user_from_database._id,
         role: user_from_database.role
     }
    const token = jwt.sign(payload,process.env.JWT_SECRET,{ expiresIn: '1h' });
