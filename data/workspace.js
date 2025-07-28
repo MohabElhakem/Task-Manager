@@ -5,7 +5,6 @@ const workspaceSchema =  mongoose.Schema({
     _id: {
         default: uuidv4,
         type: String,
-        unique: true,
     },
     creator_id:{
         required: true,

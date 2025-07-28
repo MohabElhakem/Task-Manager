@@ -3,6 +3,7 @@ const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const userRoute = require('./routes/userRoute.js');
+const servicesRoute = require('./routes/servicesRoute.js');
 const app = express();
 
 // connect Mongo
@@ -15,6 +16,8 @@ app.use(express.json());
 
 //Mount the routers here
 app.use('/user',userRoute);
+app.use('/service',servicesRoute);
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });

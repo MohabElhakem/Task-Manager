@@ -80,3 +80,4 @@ const ws_tasks = async (req,res) => {
     }
 
 }
+module.exports = {createTask,ws_tasks};
