@@ -80,4 +80,19 @@ const ws_tasks = async (req,res) => {
     }
 
 }
-module.exports = {createTask,ws_tasks};
+
+const eraseOneTask = async (req , res)=>{
+    try {
+        const taskId = req.params.task_id;
+        const exists = await task.exists({creator_id: req.userPayload._id, _id: taskId});
+        if(!exists){
+            return res.status(404).json({message: "Task not found"});
+        }
+        await task.deleteOne({creator_id: req.userPayload._id, _id: taskId});
+        return res.status(200).json({message: "good luck with your next task"});
+    } catch (error) {
+        return res.status(500).json({error: error.message})
+    }
+}
+
+module.exports = {createTask,ws_tasks,eraseOneTask};

@@ -1,5 +1,7 @@
 const path = require('path');
 const user = require(path.join(__dirname,'..','data','user.js'));
+const task = require(path.join(__dirname,'..','data','task.js'));
+const workspace = require(path.join(__dirname,'..','data','workspace.js'));
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const helper_T = require(path.join(__dirname,'..','helpers','tokens.js'));
@@ -87,5 +89,40 @@ const profile = (req,res)=>{
     }
 }
 
+// Delete
+const erase = async (req , res)=>{
 
-module.exports={createUser,loginUser,profile};
+    try {
+
+
+        // search for the user to git his password
+        const UtoD = await user.findById(req.userPayload._id);
+        // if the user is not found then git out of this endpoint
+        if (!UtoD){
+           return res.status(404).json({message: "User not found or already deleted"})
+        }
+        //it's him take the password from him
+        const {password} = req.body;
+    
+        //compare then continue to delete
+        const proceed = await bcrypt.compare(password, UtoD.password);
+    
+        //wrong password 
+        if(!proceed){
+            return res.status(403).json({message:"WRONG PASSWORD.....!"});
+        }
+
+        
+        await task.deleteMany({creator_id : UtoD._id});
+        await workspace.deleteMany({creator_id : UtoD._id});
+        await user.deleteOne({_id : UtoD._id});
+        return res.status(200).json({message : "It's Time To Say Goodbye"});
+
+    } catch (error) {
+        return res.status(500).json({error: error.message});
+    }
+
+}
+
+
+module.exports={createUser,loginUser,profile,erase};

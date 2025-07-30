@@ -20,7 +20,8 @@ const workspaceControl = require(path.join(__dirname,'..','controllers','workspa
     // Show all my WorkSpaces
     router.get ('/myWorkspaces' , helper_T.authTokenMiddleware , workspaceControl. myWorkspaces );
 
-
+    // Delete workspase and all the tasks in it 
+    router.delete('/delete/:workspace_id',helper_T.authTokenMiddleware , workspaceControl.erase);
 
 
 
@@ -36,6 +37,8 @@ const workspaceControl = require(path.join(__dirname,'..','controllers','workspa
     // Show All My Tasks
     router.get ('/myTasks/:workspace_id', helper_T.authTokenMiddleware , taskControl.ws_tasks);
 
+    //delete one task
+    router.delete('/delete/One_Task/:task_id', helper_T.authTokenMiddleware , taskControl.eraseOneTask);
 
     
 

@@ -1,5 +1,7 @@
 const path = require('path');
+const { exit } = require('process');
 const workspace = require(path.join(__dirname,'..','data','workspace.js'));
+const task = require(path.join(__dirname,'..','data','task.js'));
 
 
 //Create the workspace
@@ -67,4 +69,21 @@ const myWorkspaces = async (req,res)=>{
     }
 }
 
-module.exports={createWorkspace,myWorkspaces};
+//Delete Workspace
+const erase = async (req,res)=>{
+    try {
+        const workspace_id = req.params.workspace_id
+        const exists = await workspace.exists({_id: workspace_id,creator_id : req.userPayload._id});
+        if(!exists){
+            return res.status(404).json({message: "There is no work space with that name"});
+        }
+        await task.deleteMany({workspace_id: workspace_id });
+        await workspace.deleteOne({_id: workspace_id});
+    
+        return res.status(200).json({message: "Hope you Done will in your endeavor"});
+    } catch (error) {
+        return res.status(500).json({error: error.message});
+    }
+}
+
+module.exports={createWorkspace,myWorkspaces,erase};

@@ -13,4 +13,7 @@ router.post('/login',userControl.loginUser);
 //profile
 router.get('/profile', helper_T.authTokenMiddleware , userControl.profile);
 
+//Delete
+router.delete('/Delete',helper_T.authTokenMiddleware , userControl.delete);
+
 module.exports = router;
