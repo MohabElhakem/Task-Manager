@@ -3,7 +3,7 @@ const express = require('express');
 const task = require('../data/task');
 const router = express.Router()
 const userControl = require(path.join(__dirname,'..','controllers','userControl.js'));
-const helper_T = require(path.join(__dirname,'..','helpers','tokens.js'));
+const token = require(path.join(__dirname,'..','middleware','tokens.js'));
 const taskControl = require(path.join(__dirname,'..','controllers','taskControl.js'));
 const workspaceControl = require(path.join(__dirname,'..','controllers','workspaceControl.js'));
 
@@ -15,13 +15,13 @@ const workspaceControl = require(path.join(__dirname,'..','controllers','workspa
 
 
     // New Workspace 
-    router.post('/new/workspace',helper_T.authTokenMiddleware , workspaceControl.createWorkspace);
+    router.post('/new/workspace',token.authTokenMiddleware , workspaceControl.createWorkspace);
 
     // Show all my WorkSpaces
-    router.get ('/myWorkspaces' , helper_T.authTokenMiddleware , workspaceControl. myWorkspaces );
+    router.get ('/myWorkspaces' , token.authTokenMiddleware , workspaceControl. myWorkspaces );
 
     // Delete workspase and all the tasks in it 
-    router.delete('/delete/:workspace_id',helper_T.authTokenMiddleware , workspaceControl.erase);
+    router.delete('/delete/:workspace_id',token.authTokenMiddleware , workspaceControl.erase);
 
 
 
@@ -32,13 +32,13 @@ const workspaceControl = require(path.join(__dirname,'..','controllers','workspa
 
 
     // New Task in A WorkSpace
-    router.post('/new/task/:workspace_id' , helper_T.authTokenMiddleware , taskControl.createTask);
+    router.post('/new/task/:workspace_id' , token.authTokenMiddleware , taskControl.createTask);
 
     // Show All My Tasks
-    router.get ('/myTasks/:workspace_id', helper_T.authTokenMiddleware , taskControl.ws_tasks);
+    router.get ('/myTasks/:workspace_id', token.authTokenMiddleware , taskControl.ws_tasks);
 
     //delete one task
-    router.delete('/delete/One_Task/:task_id', helper_T.authTokenMiddleware , taskControl.eraseOneTask);
+    router.delete('/delete/One_Task/:task_id', token.authTokenMiddleware , taskControl.eraseOneTask);
 
     
 

@@ -1,8 +1,10 @@
 const path = require('path');
 const express = require('express');
+const { updatePassword } = require('../controllers/userControl');
 const router = express.Router()
 const userControl = require(path.join(__dirname,'..','controllers','userControl.js'));
-const helper_T = require(path.join(__dirname,'..','helpers','tokens.js'));
+const token = require(path.join(__dirname,'..','middleware','tokens.js'));
+const verify = require(path.join(__dirname,'..','middleware','verify.js'));
 
 //Register
 router.post('/register',userControl.createUser);
@@ -11,9 +13,12 @@ router.post('/register',userControl.createUser);
 router.post('/login',userControl.loginUser);
 
 //profile
-router.get('/profile', helper_T.authTokenMiddleware , userControl.profile);
+router.get('/profile', token.authTokenMiddleware , userControl.profile);
 
 //Delete
-router.delete('/Delete',helper_T.authTokenMiddleware , userControl.delete);
+router.delete('/Delete',token.authTokenMiddleware , userControl.delete);
+
+// Update Only the Password
+router.put('/update/password',token.authTokenMiddleware,verify.verifyPassword,updatePassword);
 
 module.exports = router;

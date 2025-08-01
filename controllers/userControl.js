@@ -4,7 +4,8 @@ const task = require(path.join(__dirname,'..','data','task.js'));
 const workspace = require(path.join(__dirname,'..','data','workspace.js'));
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const helper_T = require(path.join(__dirname,'..','helpers','tokens.js'));
+const token = require(path.join(__dirname,'..','middleware','tokens.js'));
+const verify = require(path.join(__dirname,'..','middleware','verify.js'));
 
 
 const createUser = async(req,res)=>{
@@ -68,8 +69,8 @@ const loginUser = async(req,res)=>{
             return res.status(403).json({error: "Wrong Password......!"})
         }
 
-        const token = helper_T.createToken(DBuser)
-        return res.status(201).send(token);
+        const TOKEN = token.createToken(DBuser)
+        return res.status(201).send(TOKEN);
 
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -124,5 +125,31 @@ const erase = async (req , res)=>{
 
 }
 
+const updatePassword = async (req,rea)=> {
+    try {
+        const { NewPassword,ConfirmPassword } = req.body;
+        if (!NewPassword || !ConfirmPassword){
+            return res.status(400).json({ message: "New and confirm password are required" });
+        }
+        if (NewPassword !== ConfirmPassword){
+            return res.status(400).json({message : "Please confirm the new password"});
+        }
+        const hasedNewPassword = await bcrypt.hash(ConfirmPassword,5);
 
-module.exports={createUser,loginUser,profile,erase};
+        await user.updateOne(
+            {_id : req.userPayload._id},
+            {$set : {password: hasedNewPassword}}
+        )
+
+        return res.status(200).json({
+            message: "Password updated. Please log in again.",
+            forceLogout: true
+        });
+
+    } catch (error) {
+        return res.status(500).json({error: error.message});
+    }
+}
+
+
+module.exports={createUser,loginUser,profile,erase,updatePassword};
