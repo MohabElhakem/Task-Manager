@@ -11,6 +11,17 @@ router.post(
     userControl.sign
 )
 
+router.post(
+    '/login',
+    Validate(JoiSc.loginSchema),
+    userControl.login
+)
+
+router.post(
+    '/updatePassword',
+    userControl.updatePassword
+)
+
 
 
 export default router;

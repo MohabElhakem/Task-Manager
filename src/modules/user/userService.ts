@@ -77,11 +77,48 @@ const get_by_id = async (userId :string ) =>{
  *      |-> the user object fromt the DB
  * 
  */
+const get_by_email = async (email : string) => {
+    const user = await User.findOne({email: email}).lean();
+    if(!user) throw new Err.NotFound("couldin't find the user in the DB\n");
+    return user;
+}
+/**
+ * get_by_eamil:
+ *  - to seacrh the user by email from the DB 
+ *  - needs only the email
+ *  
+ * Returns : 
+ *      |
+ *      |-> the user object fromt the DB
+ * 
+ */
+export const update_password = async (
+  userId: string,
+  newPassword: string,
+  confirmPassword: string
+): Promise<void> => {
+
+  if (newPassword !== confirmPassword) {
+    throw new Err.BadRequest("Passwords do not match");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new Err.NotFound("User not found");
+  }
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+};
+
+
 
 
 const index = {
     creat_user_in_DB,
     get_by_id,
+    get_by_email,
+    update_password
 }
 
 export default index 
